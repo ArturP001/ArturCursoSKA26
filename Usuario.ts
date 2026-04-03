@@ -12,3 +12,6 @@ User2.falar();
 let Prof:Professor= new Professor("Renan", 27, "Fisica", 10);
 Prof.falar();
 
+
+
+

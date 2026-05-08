@@ -1,48 +1,35 @@
-<!-- Todo arquivo HTML começa assim -->
-<!DOCTYPE html>
-<html lang="pt-BR">
 
+<!doctype html>
+<html lang="pt-BR">
   <head>
     <!-- Metadados: não aparecem na tela -->
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-
-    <title>Minha Primeira Página</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+    <script src ="calculadora.js"></script>
   </head>
+     
+  <body>
+    <div class="calculadora">
+      <input class="resultado" id="calcjava" type="text" />
 
-  <body class="calculadora">
-    <div>
-     Numero: <input type="numero"/>
+      <div class="botao">     
+          <button onclick="adicionar('+')">+</button>
+          <button onclick="adicionar('-')">-</button>    
+          <button onclick="adicionar('*')">*</button>
+          <button onclick="adicionar('/')">/</button>
+          <button onclick="calcular('=')">=</button>
+          <button onclick="limpar('C')">C</button>
+          <button onclick="adicionar('1')">1</button>
+          <button onclick="adicionar('2')">2</button>
+          <button onclick="adicionar('3')">3</button>
+          <button onclick="adicionar('4')">4</button>
+          <button onclick="adicionar('5')">5</button>
+          <button onclick="adicionar('6')">6</button>
+          <button onclick="adicionar('7')">7</button>
+          <button onclick="adicionar('8')">8</button>
+          <button onclick="adicionar('9')">9</button>
+          <button onclick="adicionar('0')">0</button>
+        </div>
     </div>
-    <div class="teclas">
-        <input type="teclas" value="[+]" />
-        <input type="teclas" value="[-]" />
-        <input type="teclas" value="[%]" />
-        <input type="teclas" value="[*]" />
-    </div>
-    <div class="teclas">
-        <input type="teclas" value="[7]" />
-        <input type="teclas" value="[8]" />
-        <input type="teclas" value="[9]" />
-        <input type="teclas" value="[c]" />
-    </div>
-    <div class="teclas">
-        <input type="teclas" value="[4]" />
-        <input type="teclas" value="[5]" />
-        <input type="teclas" value="[6]" />
-        <input type="teclas" value="[.]" />
-    </div>
-    <div class="teclas">
-        <input type="teclas" value="[1]" />
-        <input type="teclas" value="[2]" />
-        <input type="teclas" value="[3]" />
-        <input type="teclas" value="[=]" />
-    </div>
-    <div>
-        <input type="teclas" value="[0]"
-    </div>
-
 
   </body>
-
-</html>

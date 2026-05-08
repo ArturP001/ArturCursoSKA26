@@ -1,4 +1,22 @@
 .calculadora{
-    background-color: darkgrey;
-    height: 300px;
+    background-color: lch(0% 0 0 / 0.979);
+    height: 500px;
+    width: 500px;
 }
+.botao{
+     display: grid;
+    grid-template-columns: repeat(4, 80px);
+    gap: 10px;
+}
+
+.resultado{
+    width: 100%;
+    height: 30px;
+    text-align: right;
+}
+.botao button{
+    font-size: 24px;
+    height: 50px;
+    background: white;
+    border: none;
+}  

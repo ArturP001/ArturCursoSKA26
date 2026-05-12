@@ -1,4 +1,15 @@
+export type ResultadoAtaque = {
+  atacante: string;
+  alvo: string;
+  numeroAtaque: number;
+  danoBase: number;
+  danoReal: number;
+  vidaAlvo: number;
+};
+
 export abstract class Personagem {
+  private static readonly VIDA_MAXIMA = 100;
+
   // Atributos principais que todos os personagens possuem.
   public nome: string;
   protected forca: number;
@@ -24,11 +35,11 @@ export abstract class Personagem {
   }
 
   // Aplica o dano recebido considerando a defesa.
-  sofrerAtaque(dano: number): void {
+  sofrerAtaque(dano: number): number {
     const danoReal = dano - dano * (this.defesa / 100);
     this.HP = Math.max(0, this.HP - danoReal);
 
-    console.log(`${this.nome} recebeu ${danoReal} de dano. Vida atual: ${this.HP}`);
+    return danoReal;
   }
 
   // Sorteia qual ataque sera usado.
@@ -48,14 +59,39 @@ export abstract class Personagem {
   }
 
   // Usa a cura apenas uma vez quando a vida esta baixa.
-  usarCurar(): void {
-    if (this.HP <= 50 && !this.jaCurou) {
-      this.HP += this.cura;
+  usarCurar(): number {
+    if (this.isVivo() && this.HP <= 50 && !this.jaCurou) {
+      const vidaAntes = this.HP;
+      this.HP = Math.min(Personagem.VIDA_MAXIMA, this.HP + this.cura);
       this.jaCurou = true;
-      console.log(`${this.nome} usou a cura. Vida atual: ${this.HP}`);
+      return this.HP - vidaAntes;
     }
+
+    return 0;
+  }
+
+  protected executarAtaque(pers: Personagem): ResultadoAtaque {
+    const numeroAtaque = this.gerarAtaque();
+    const danoBase = this.getDanoDoAtaque(numeroAtaque);
+    const danoReal = pers.sofrerAtaque(danoBase);
+
+    return {
+      atacante: this.nome,
+      alvo: pers.nome,
+      numeroAtaque,
+      danoBase,
+      danoReal,
+      vidaAlvo: pers.getVida(),
+    };
+  }
+
+  private getDanoDoAtaque(numeroAtaque: number): number {
+    const danos = [20, 20, 30, 35];
+    const bonusAtaque = danos[numeroAtaque - 1] ?? 0;
+
+    return this.forca + bonusAtaque;
   }
 
   // Cada classe filha precisa criar seu proprio ataque.
-  public abstract atacar(pers: Personagem): void;
+  public abstract atacar(pers: Personagem): ResultadoAtaque;
 }

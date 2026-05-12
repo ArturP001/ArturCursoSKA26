@@ -40,6 +40,24 @@ body {
   gap: 24px;
 }
 
+.jogo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.tela {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.escondido {
+  display: none;
+}
+
 
 /* =============================================
    TÍTULO
@@ -190,7 +208,7 @@ h1 {
 ============================================= */
 .console {
   width: 100%;
-  max-width: 640px;
+  max-width: 900px;
   background: #080814;
   border: 2px solid var(--border);
   border-radius: 6px;
@@ -201,6 +219,7 @@ h1 {
   font-family: var(--font);
   color: var(--text-muted);
   line-height: 1.8;
+  font-size: 10px;
 }
 
 /* Estilo da barra de rolagem do console */

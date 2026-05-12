@@ -6,8 +6,11 @@ import { Personagem } from "./Personagem";
 
 // Conecta o TypeScript com os elementos do HTML.
 const jogo: Jogo = new Jogo();
-const btnJogar = document.getElementById("btn-jogar") as HTMLButtonElement;
+const telaMenu = document.getElementById("tela-menu") as HTMLElement;
+const telaBatalha = document.getElementById("tela-batalha") as HTMLElement;
+const btnComecar = document.getElementById("btn-comecar") as HTMLButtonElement;
 const btnReiniciar = document.getElementById("btn-reiniciar") as HTMLButtonElement;
+const btnVoltarMenu = document.getElementById("btn-voltar-menu") as HTMLButtonElement;
 const selectPlayer1 = document.getElementById("select-player1") as HTMLSelectElement;
 const selectPlayer2 = document.getElementById("select-player2") as HTMLSelectElement;
 
@@ -33,30 +36,48 @@ function criaPersonagens(): { player1: Personagem; player2: Personagem } {
   };
 }
 
-// Reinicia a tela usando os personagens selecionados.
-function reiniciar(): void {
-  const { player1, player2 } = criaPersonagens();
-  btnJogar.disabled = false;
-  jogo.reiniciaInterface(player1, player2);
+// Mostra apenas a tela de selecao.
+function mostrarMenu(): void {
+  telaMenu.classList.remove("escondido");
+  telaBatalha.classList.add("escondido");
 }
 
-// Inicia a batalha e trava os botoes enquanto ela acontece.
-async function jogar(): Promise<void> {
+// Mostra apenas a tela da batalha.
+function mostrarBatalha(): void {
+  telaMenu.classList.add("escondido");
+  telaBatalha.classList.remove("escondido");
+}
+
+// Inicia a batalha usando os personagens escolhidos no menu.
+async function comecarBatalha(): Promise<void> {
   const { player1, player2 } = criaPersonagens();
-  btnJogar.disabled = true;
+
+  mostrarBatalha();
+  btnComecar.disabled = true;
   btnReiniciar.disabled = true;
+  btnVoltarMenu.disabled = true;
 
   await jogo.inicia(player1, player2);
 
-  btnJogar.disabled = false;
+  btnComecar.disabled = false;
   btnReiniciar.disabled = false;
+  btnVoltarMenu.disabled = false;
 }
 
-// Eventos dos botoes e dos selects.
-btnJogar.addEventListener("click", jogar);
-btnReiniciar.addEventListener("click", reiniciar);
-selectPlayer1.addEventListener("change", reiniciar);
-selectPlayer2.addEventListener("change", reiniciar);
+// Reinicia a batalha mantendo os personagens escolhidos.
+async function reiniciar(): Promise<void> {
+  await comecarBatalha();
+}
 
-// Prepara a tela assim que a pagina abre.
-reiniciar();
+// Volta para o menu para escolher outros personagens.
+function voltarMenu(): void {
+  mostrarMenu();
+}
+
+// Eventos dos botoes.
+btnComecar.addEventListener("click", comecarBatalha);
+btnReiniciar.addEventListener("click", reiniciar);
+btnVoltarMenu.addEventListener("click", voltarMenu);
+
+// Comeca mostrando apenas o menu.
+mostrarMenu();

@@ -1,4 +1,4 @@
-import { Personagem } from "./Personagem";
+import { Personagem, ResultadoAtaque } from "./Personagem";
 
 const VIDA_MAXIMA = 100;
 
@@ -8,13 +8,15 @@ export class Jogo {
     let turno = 1;
     this.limpaLog();
     this.atualizaInterface(player1, player2);
+    this.log(`Batalha iniciada: ${player1.nome} vs ${player2.nome}`);
 
     while (player1.isVivo() && player2.isVivo()) {
-      this.log(`========== TURNO ${turno} ==========`);
+      this.log(`\n==========================TURNO ${turno}============================ `);
 
       // Primeiro personagem ataca.
-      player1.atacar(player2);
-      this.log(`${player1.nome} atacou ${player2.nome}. ${player2.nome} ficou com ${player2.getVida()} HP.`);
+      const ataquePlayer1 = player1.atacar(player2);
+      this.log(this.criaMensagemAtaque(ataquePlayer1));
+      this.tentaCurar(player2);
       this.atualizaInterface(player1, player2);
       await this.esperaTempo();
 
@@ -23,8 +25,9 @@ export class Jogo {
       }
 
       // Segundo personagem contra-ataca.
-      player2.atacar(player1);
-      this.log(`${player2.nome} atacou ${player1.nome}. ${player1.nome} ficou com ${player1.getVida()} HP.`);
+      const ataquePlayer2 = player2.atacar(player1);
+      this.log(this.criaMensagemAtaque(ataquePlayer2));
+      this.tentaCurar(player1);
       this.atualizaInterface(player1, player2);
       await this.esperaTempo();
 
@@ -33,7 +36,7 @@ export class Jogo {
 
     // Quem ainda estiver vivo no final e o vencedor.
     const vencedor = player1.isVivo() ? player1 : player2;
-    this.log(`${vencedor.nome} ganhou a luta!`);
+    this.log(`\nVencedor: ${vencedor.nome}!`);
     return vencedor;
   }
 
@@ -62,9 +65,33 @@ export class Jogo {
 
   // Escreve uma nova mensagem no console da tela.
   public log(mensagem: string): void {
-    const consoleHtml = this.buscaComponenteHtml("console");
-    consoleHtml.textContent += `${mensagem}\n`;
+    const consoleHtml = (this.buscaComponenteHtml("console")) as HTMLElement;
+    consoleHtml.innerHTML += `<p>${mensagem}</p>`;
     consoleHtml.scrollTop = consoleHtml.scrollHeight;
+  }
+
+  private criaMensagemAtaque(ataque: ResultadoAtaque): string {
+    return [
+      `${ataque.atacante} usou ataque ${ataque.numeroAtaque} em ${ataque.alvo}.`,
+      `Dano base: ${this.formataNumero(ataque.danoBase)}.`,
+      `Dano final: ${this.formataNumero(ataque.danoReal)}.`,
+      `HP de ${ataque.alvo}: ${this.formataNumero(ataque.vidaAlvo)}.`,
+    ].join(" ");
+  }
+
+  private tentaCurar(player: Personagem): void {
+    const curaRecebida = player.usarCurar();
+
+    if (curaRecebida > 0) {
+      this.log(
+        `${player.nome} usou cura (+${this.formataNumero(curaRecebida)} HP). ` +
+          `HP atual: ${this.formataNumero(player.getVida())}.`,
+      );
+    }
+  }
+
+  private formataNumero(numero: number): string {
+    return Number.isInteger(numero) ? String(numero) : numero.toFixed(1);
   }
 
   // Atualiza imagens, nomes e barras de vida dos personagens.

@@ -52,10 +52,12 @@
       const numeroAtaque = this.gerarAtaque();
       const danoBase = this.getDanoDoAtaque(numeroAtaque);
       const danoReal = pers.sofrerAtaque(danoBase);
+      const nomeAtaque = this.getNomeAtaque(numeroAtaque);
       return {
         atacante: this.nome,
         alvo: pers.nome,
         numeroAtaque,
+        nomeAtaque,
         danoBase,
         danoReal,
         vidaAlvo: pers.getVida()
@@ -69,36 +71,58 @@
   };
 
   // src/Arqueiro.ts
-  var Arqueiro = class extends Personagem {
-    constructor(nome, forca, HP) {
-      super(
-        nome,
-        forca,
-        HP,
-        20,
-        10,
-        "src/img/gato.png"
-      );
+  var Arqueiro = class _Arqueiro extends Personagem {
+    static {
+      this.DANOS_ATAQUE = [18, 22, 28, 38];
+    }
+    static {
+      this.NOMES_ATAQUE = [
+        "Flecha R\xE1pida",
+        "Flecha Dupla",
+        "Chuva de Flechas",
+        "Flecha Explosiva"
+      ];
+    }
+    constructor(nome) {
+      super(nome, 14, 100, 18, 12, "src/img/gato.png");
     }
     atacar(pers) {
       return this.executarAtaque(pers);
+    }
+    getDanoDoAtaque(numeroAtaque) {
+      const bonusAtaque = _Arqueiro.DANOS_ATAQUE[numeroAtaque - 1] ?? 0;
+      return this.forca + bonusAtaque;
+    }
+    getNomeAtaque(numeroAtaque) {
+      return _Arqueiro.NOMES_ATAQUE[numeroAtaque - 1] ?? "Ataque Desconhecido";
     }
   };
 
   // src/Cavaleiro.ts
-  var Cavaleiro = class extends Personagem {
-    constructor(nome, forca, HP) {
-      super(
-        nome,
-        forca,
-        HP,
-        20,
-        10,
-        "https://static.vecteezy.com/system/resources/previews/069/210/287/non_2x/pixel-art-cat-warrior-in-red-cape-png.png"
-      );
+  var Cavaleiro = class _Cavaleiro extends Personagem {
+    static {
+      this.DANOS_ATAQUE = [20, 25, 30, 40];
+    }
+    static {
+      this.NOMES_ATAQUE = [
+        "Golpe B\xE1sico",
+        "Golpe Duplo",
+        "Ataque Pesado",
+        "Golpe Cr\xEDtico"
+      ];
+    }
+    constructor(nome) {
+      super(nome, 15, 120, 20, 20, "https://static.vecteezy.com/system/resources/previews/069/210/287/non_2x/pixel-art-cat-warrior-in-red-cape-png.png");
     }
     atacar(pers) {
       return this.executarAtaque(pers);
+    }
+    getDanoDoAtaque(numeroAtaque) {
+      const bonusAtaque = _Cavaleiro.DANOS_ATAQUE[numeroAtaque - 1] ?? 0;
+      return this.forca + bonusAtaque;
+    }
+    getNomeAtaque(numeroAtaque) {
+      return _Cavaleiro.NOMES_ATAQUE[numeroAtaque - 1] ?? "Ataque Desconhecido";
     }
   };
 
@@ -160,7 +184,7 @@ Vencedor: ${vencedor.nome}!`);
     }
     criaMensagemAtaque(ataque) {
       return [
-        `${ataque.atacante} usou ataque ${ataque.numeroAtaque} em ${ataque.alvo}.`,
+        `${ataque.atacante} usou ${ataque.nomeAtaque} em ${ataque.alvo}!`,
         `Dano base: ${this.formataNumero(ataque.danoBase)}.`,
         `Dano final: ${this.formataNumero(ataque.danoReal)}.`,
         `HP de ${ataque.alvo}: ${this.formataNumero(ataque.vidaAlvo)}.`
@@ -202,12 +226,30 @@ Vencedor: ${vencedor.nome}!`);
   };
 
   // src/Mago.ts
-  var Mago = class extends Personagem {
-    constructor(nome, forca, HP) {
-      super(nome, forca, HP, 20, 10, "https://static.vecteezy.com/system/resources/thumbnails/069/209/991/small/pixel-art-wizard-cat-with-staff-and-purple-robe-png.png");
+  var Mago = class _Mago extends Personagem {
+    static {
+      this.DANOS_ATAQUE = [15, 20, 35, 50];
+    }
+    static {
+      this.NOMES_ATAQUE = [
+        "Magia de Fogo",
+        "Magia de Gelo",
+        "Raio Arcano",
+        "Explos\xE3o M\xE1gica"
+      ];
+    }
+    constructor(nome) {
+      super(nome, 20, 100, 15, 5, "https://static.vecteezy.com/system/resources/thumbnails/069/209/991/small/pixel-art-wizard-cat-with-staff-and-purple-robe-png.png");
     }
     atacar(pers) {
       return this.executarAtaque(pers);
+    }
+    getDanoDoAtaque(numeroAtaque) {
+      const bonusAtaque = _Mago.DANOS_ATAQUE[numeroAtaque - 1] ?? 0;
+      return this.forca + bonusAtaque;
+    }
+    getNomeAtaque(numeroAtaque) {
+      return _Mago.NOMES_ATAQUE[numeroAtaque - 1] ?? "Ataque Desconhecido";
     }
   };
 
@@ -223,11 +265,11 @@ Vencedor: ${vencedor.nome}!`);
   function criarPersonagem(tipo) {
     switch (tipo) {
       case "cavaleiro":
-        return new Cavaleiro("Cavaleiro", 10, 100);
+        return new Cavaleiro("Cavaleiro");
       case "mago":
-        return new Mago("Mago", 10, 100);
+        return new Mago("Mago");
       case "arqueiro":
-        return new Arqueiro("Arqueiro", 10, 100);
+        return new Arqueiro("Arqueiro");
       default:
         throw new Error("Personagem selecionado invalido");
     }

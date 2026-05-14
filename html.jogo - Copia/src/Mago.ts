@@ -1,35 +1,29 @@
-import { Personagem } from "./Personagem";
+import { Personagem, ResultadoAtaque } from "./Personagem";
 
-export class Mago extends Personagem{
+export class Mago extends Personagem {
+  private static readonly DANOS_ATAQUE = [15, 20, 35, 50];
+  private static readonly NOMES_ATAQUE = [
+    "Magia de Fogo",
+    "Magia de Gelo",
+    "Raio Arcano",
+    "Explosão Mágica"
+  ];
 
-    constructor(nome:string, forca:number, HP:number){
-        super(nome, forca, HP, 20, 10, "https://static.vecteezy.com/system/resources/thumbnails/069/209/991/small/pixel-art-wizard-cat-with-staff-and-purple-robe-png.png");
+  constructor(nome: string) {
+    // HP: 80, Força: 20, Cura: 15, Defesa: 5%
+    super(nome, 20, 100, 15, 5, "https://static.vecteezy.com/system/resources/thumbnails/069/209/991/small/pixel-art-wizard-cat-with-staff-and-purple-robe-png.png");
+  }
 
-    }
+  public atacar(pers: Personagem): ResultadoAtaque {
+    return this.executarAtaque(pers);
+  }
 
-    public atacar(pers: Personagem): void {
-    let dado = this.gerarAtaque();
-    switch(dado){
-    case 1:
-        console.log(`${this.nome} atacou o personagem: ${pers.nome} com ataque 1`,);
-        pers.sofrerAtaque(this.forca + 20);
-        break;
-      case 2:
-        console.log(`${this.nome} atacou o personagem: ${pers.nome} com ataque 2`,);
-        pers.sofrerAtaque(this.forca + 20);
-        break;
-      case 3:
-        console.log(`${this.nome} atacou o personagem: ${pers.nome} com ataque 3`,);
-        pers.sofrerAtaque(this.forca + 30);
-        break;
-      case 4:
-        console.log(
-          `${this.nome} atacou o personagem: ${pers.nome} com ataque 4`,);
-        pers.sofrerAtaque(this.forca + 35);
-        break;
+  protected getDanoDoAtaque(numeroAtaque: number): number {
+    const bonusAtaque = Mago.DANOS_ATAQUE[numeroAtaque - 1] ?? 0;
+    return this.forca + bonusAtaque;
+  }
 
-      default:
-        break;
-    }
+  protected getNomeAtaque(numeroAtaque: number): string {
+    return Mago.NOMES_ATAQUE[numeroAtaque - 1] ?? "Ataque Desconhecido";
   }
 }

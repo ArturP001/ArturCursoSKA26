@@ -1,41 +1,29 @@
-import { Personagem } from "./Personagem";
+import { Personagem, ResultadoAtaque } from "./Personagem";
 
 export class Cavaleiro extends Personagem {
-  constructor(nome: string, forca: number, HP: number) {
-    super(nome, forca, HP, 20, 10, "https://static.vecteezy.com/system/resources/previews/069/210/287/non_2x/pixel-art-cat-warrior-in-red-cape-png.png",
-    );
+  private static readonly DANOS_ATAQUE = [20, 25, 30, 40];
+  private static readonly NOMES_ATAQUE = [
+    "Golpe Básico",
+    "Golpe Duplo",
+    "Ataque Pesado",
+    "Golpe Crítico"
+  ];
+
+  constructor(nome: string) {
+    // HP: 120, Força: 15, Cura: 20, Defesa: 20%
+    super(nome, 15, 120, 20, 20, "https://static.vecteezy.com/system/resources/previews/069/210/287/non_2x/pixel-art-cat-warrior-in-red-cape-png.png");
   }
 
-  public atacar(pers: Personagem): void {
-    let dado = this.gerarAtaque();
-    switch (dado) {
-      case 1:
-        console.log(
-          `${this.nome} atacou o personagem: ${pers.nome} com ataque 1`,
-        );
-        pers.sofrerAtaque(this.forca + 20);
-        break;
-      case 2:
-        console.log(
-          `${this.nome} atacou o personagem: ${pers.nome} com ataque 2`,
-        );
-        pers.sofrerAtaque(this.forca + 20);
-        break;
-      case 3:
-        console.log(
-          `${this.nome} atacou o personagem: ${pers.nome} com ataque 3`,
-        );
-        pers.sofrerAtaque(this.forca + 30);
-        break;
-      case 4:
-        console.log(
-          `${this.nome} atacou o personagem: ${pers.nome} com ataque 4`,
-        );
-        pers.sofrerAtaque(this.forca + 35);
-        break;
+  public atacar(pers: Personagem): ResultadoAtaque {
+    return this.executarAtaque(pers);
+  }
 
-      default:
-        break;
-    }
+  protected getDanoDoAtaque(numeroAtaque: number): number {
+    const bonusAtaque = Cavaleiro.DANOS_ATAQUE[numeroAtaque - 1] ?? 0;
+    return this.forca + bonusAtaque;
+  }
+
+  protected getNomeAtaque(numeroAtaque: number): string {
+    return Cavaleiro.NOMES_ATAQUE[numeroAtaque - 1] ?? "Ataque Desconhecido";
   }
 }

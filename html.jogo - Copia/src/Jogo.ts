@@ -72,7 +72,7 @@ export class Jogo {
 
   private criaMensagemAtaque(ataque: ResultadoAtaque): string {
     return [
-      `${ataque.atacante} usou ataque ${ataque.numeroAtaque} em ${ataque.alvo}.`,
+      `${ataque.atacante} usou ${ataque.nomeAtaque} em ${ataque.alvo}!`,
       `Dano base: ${this.formataNumero(ataque.danoBase)}.`,
       `Dano final: ${this.formataNumero(ataque.danoReal)}.`,
       `HP de ${ataque.alvo}: ${this.formataNumero(ataque.vidaAlvo)}.`,

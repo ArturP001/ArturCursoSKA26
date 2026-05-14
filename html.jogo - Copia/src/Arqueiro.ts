@@ -1,41 +1,29 @@
-import { Personagem } from "./Personagem";
+import { Personagem, ResultadoAtaque } from "./Personagem";
 
 export class Arqueiro extends Personagem {
-  constructor(nome: string, forca: number, HP: number) {
-    super(nome, forca, HP, 20, 10, "src/img/gato.png",
-    );
+  private static readonly DANOS_ATAQUE = [18, 22, 28, 38];
+  private static readonly NOMES_ATAQUE = [
+    "Flecha Rápida",
+    "Flecha Dupla",
+    "Chuva de Flechas",
+    "Flecha Explosiva"
+  ];
+
+  constructor(nome: string) {
+    // HP: 100, Força: 14, Cura: 18, Defesa: 12%
+    super(nome, 14, 100, 18, 12, "src/img/gato.png");
   }
 
-  public atacar(pers: Personagem): void {
-    let dado = this.gerarAtaque();
-    switch (dado) {
-      case 1:
-        console.log(
-          `${this.nome} atacou o personagem: ${pers.nome} com ataque 1`,
-        );
-        pers.sofrerAtaque(this.forca + 20);
-        break;
-      case 2:
-        console.log(
-          `${this.nome} atacou o personagem: ${pers.nome} com ataque 2`,
-        );
-        pers.sofrerAtaque(this.forca + 20);
-        break;
-      case 3:
-        console.log(
-          `${this.nome} atacou o personagem: ${pers.nome} com ataque 3`,
-        );
-        pers.sofrerAtaque(this.forca + 30);
-        break;
-      case 4:
-        console.log(
-          `${this.nome} atacou o personagem: ${pers.nome} com ataque 4`,
-        );
-        pers.sofrerAtaque(this.forca + 35);
-        break;
+  public atacar(pers: Personagem): ResultadoAtaque {
+    return this.executarAtaque(pers);
+  }
 
-      default:
-        break;
-    }
+  protected getDanoDoAtaque(numeroAtaque: number): number {
+    const bonusAtaque = Arqueiro.DANOS_ATAQUE[numeroAtaque - 1] ?? 0;
+    return this.forca + bonusAtaque;
+  }
+
+  protected getNomeAtaque(numeroAtaque: number): string {
+    return Arqueiro.NOMES_ATAQUE[numeroAtaque - 1] ?? "Ataque Desconhecido";
   }
 }

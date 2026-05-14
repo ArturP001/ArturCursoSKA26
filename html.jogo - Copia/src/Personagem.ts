@@ -2,6 +2,7 @@ export type ResultadoAtaque = {
   atacante: string;
   alvo: string;
   numeroAtaque: number;
+  nomeAtaque: string;
   danoBase: number;
   danoReal: number;
   vidaAlvo: number;
@@ -74,23 +75,26 @@ export abstract class Personagem {
     const numeroAtaque = this.gerarAtaque();
     const danoBase = this.getDanoDoAtaque(numeroAtaque);
     const danoReal = pers.sofrerAtaque(danoBase);
+    const nomeAtaque = this.getNomeAtaque(numeroAtaque);
 
     return {
       atacante: this.nome,
       alvo: pers.nome,
       numeroAtaque,
+      nomeAtaque,
       danoBase,
       danoReal,
       vidaAlvo: pers.getVida(),
     };
   }
 
-  private getDanoDoAtaque(numeroAtaque: number): number {
+  protected getDanoDoAtaque(numeroAtaque: number): number {
     const danos = [20, 20, 30, 35];
     const bonusAtaque = danos[numeroAtaque - 1] ?? 0;
-
     return this.forca + bonusAtaque;
   }
+
+  protected abstract getNomeAtaque(numeroAtaque: number): string;
 
   // Cada classe filha precisa criar seu proprio ataque.
   public abstract atacar(pers: Personagem): ResultadoAtaque;

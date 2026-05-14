@@ -18,11 +18,11 @@ const selectPlayer2 = document.getElementById("select-player2") as HTMLSelectEle
 function criarPersonagem(tipo: string): Personagem {
   switch (tipo) {
     case "cavaleiro":
-      return new Cavaleiro("Cavaleiro", 10, 100);
+      return new Cavaleiro("Cavaleiro");
     case "mago":
-      return new Mago("Mago", 10, 100);
+      return new Mago("Mago");
     case "arqueiro":
-      return new Arqueiro("Arqueiro", 10, 100);
+      return new Arqueiro("Arqueiro");
     default:
       throw new Error("Personagem selecionado invalido");
   }
